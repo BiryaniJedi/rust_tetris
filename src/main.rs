@@ -4,15 +4,21 @@ mod tetromino;
 use board::Board;
 use tetromino::{Shape, Tetromino};
 fn main() {
-    let mut board = Board::new();
-    let piece = Tetromino::new(3, 17, Shape::I);
+    let board = Board::new();
+    let mut piece = Tetromino::new(3, 5, Shape::T);
 
-    println!("Before locking:");
+    println!("Rotation 0:");
     board.print_with_piece(&piece);
 
-    board.lock_piece(&piece);
+    piece.rotate_cw();
+    println!("\nRotation 1:");
+    board.print_with_piece(&piece);
 
-    println!("\nAfter locking (no piece overlay):");
-    let dummy = Tetromino::new(-10, -10, Shape::I); // Off-screen piece
-    board.print_with_piece(&dummy);
+    piece.rotate_cw();
+    println!("\nRotation 2:");
+    board.print_with_piece(&piece);
+
+    piece.rotate_cw();
+    println!("\nRotation 3:");
+    board.print_with_piece(&piece);
 }
