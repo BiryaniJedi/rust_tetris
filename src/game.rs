@@ -1,6 +1,7 @@
 use crate::board::Board;
-use crate::tetromino::{Shape, Tetromino};
+use crate::tetromino::{Direction, Shape, Tetromino};
 
+#[derive(Debug, Copy, Clone)]
 pub enum GameState {
     Playing,
     GameOver,
@@ -15,12 +16,22 @@ pub struct Game {
 
 impl Game {
     pub fn new() -> Self {
-        Self {
+        let mut game = Self {
             board: Board::new(),
             current_piece: None,
             state: GameState::Playing,
             score: 0,
-        }
+        };
+        game.set_random_piece();
+        game
+    }
+
+    pub fn get_score(&self) -> u32 {
+        self.score
+    }
+
+    pub fn get_state(&self) -> GameState {
+        self.state
     }
 
     pub fn set_random_piece(&mut self) {
@@ -41,6 +52,86 @@ impl Game {
         }
         self.state = GameState::GameOver;
     }
+
+    pub fn try_move(&mut self, direction: Direction) -> Result<(), String> {
+        if let Some(piece) = &mut self.current_piece {
+            //compute new position after movement
+            let old_direction = match &direction {
+                Direction::Left => Direction::Right,
+                Direction::Down => Direction::Up,
+                Direction::Right => Direction::Left,
+                Direction::Up => Direction::Down,
+            };
+            piece.move_piece(direction);
+            if self.board.can_place(piece) {
+                return Ok(());
+            }
+            piece.move_piece(old_direction);
+            return Err("Move invalid".to_string());
+        }
+        Err("No current piece".to_string())
+    }
+
+    pub fn try_rotate_clock(&mut self) -> Result<(), String> {
+        if let Some(piece) = &mut self.current_piece {
+            //compute new position after movement
+            piece.rotate_cw();
+            if self.board.can_place(piece) {
+                return Ok(());
+            }
+            piece.rotate_ccw();
+            return Err("Rotation invalid".to_string());
+        }
+        Err("No current piece".to_string())
+    }
+    pub fn try_rotate_counter(&mut self) -> Result<(), String> {
+        if let Some(piece) = &mut self.current_piece {
+            //compute new position after movement
+            piece.rotate_ccw();
+            if self.board.can_place(piece) {
+                return Ok(());
+            }
+            piece.rotate_cw();
+            return Err("Rotation invalid".to_string());
+        }
+        Err("No current piece".to_string())
+    }
+    pub fn lock_current_piece(&mut self) -> Result<(), String> {
+        if let Some(piece) = &self.current_piece {
+            self.board.lock_piece(piece);
+            let lines_cleared = self.board.clear_lines();
+            self.score += match lines_cleared {
+                1 => 100,
+                2 => 300,
+                3 => 500,
+                4 => 800,
+                _ => 0,
+            };
+            self.set_random_piece();
+            return Ok(());
+        }
+        Err("No current piece or place to put it!".to_string())
+    }
+    pub fn tick_down(&mut self) {
+        if self.try_move(Direction::Down).is_ok() {
+            return;
+        }
+        let _ = self.lock_current_piece();
+    }
+    pub fn display(&self) {
+        match &self.state {
+            GameState::GameOver => {
+                println!("Game over!");
+            }
+            GameState::Playing => {
+                if let Some(piece) = &self.current_piece {
+                    self.board.print_with_piece(piece);
+                    return;
+                }
+                panic!("No current piece when trying to display game!")
+            }
+        }
+    }
 }
 
 pub fn match_shape(shape_index: u8) -> Shape {
@@ -53,5 +144,15 @@ pub fn match_shape(shape_index: u8) -> Shape {
         5 => Shape::J,
         6 => Shape::L,
         _ => Shape::T,
+    }
+}
+
+pub fn match_direction(direction_index: u8) -> Direction {
+    match direction_index {
+        0 => Direction::Left,
+        1 => Direction::Down,
+        2 => Direction::Right,
+        3 => Direction::Up,
+        _ => panic!("Bad direction!"),
     }
 }

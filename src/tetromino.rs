@@ -16,8 +16,14 @@ pub struct Tetromino {
 
 pub enum Direction {
     Left,
-    Right,
     Down,
+    Right,
+    Up,
+}
+
+pub enum Rotation {
+    Clock,
+    Counter,
 }
 
 impl Tetromino {
@@ -43,6 +49,10 @@ impl Tetromino {
             }
             Direction::Down => {
                 self.pos.1 += 1;
+            }
+            //reversal purposes
+            Direction::Up => {
+                self.pos.1 -= 1;
             }
         }
     }

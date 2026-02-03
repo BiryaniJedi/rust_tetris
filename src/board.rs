@@ -294,7 +294,7 @@ impl Board {
     /// board.print_with_piece(&piece); // Prints visual representation to console
     /// ```
     pub fn print_with_piece(&self, piece: &Tetromino) {
-        let mut board_str = [["0"; BOARD_WIDTH]; BOARD_HEIGHT];
+        let mut board_str = [[" "; BOARD_WIDTH]; BOARD_HEIGHT];
 
         piece.get_cords().iter().for_each(|&(x, y)| {
             if Board::pos_in_bounds(x, y) {
