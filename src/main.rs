@@ -1,11 +1,14 @@
 mod board;
+mod game;
 mod tetromino;
+
+//use crate::fastrand;
 
 use board::Board;
 use tetromino::{Shape, Tetromino};
 fn main() {
     let board = Board::new();
-    let mut piece = Tetromino::new(3, 5, Shape::T);
+    let mut piece = Tetromino::new((3, 5), Shape::T);
 
     println!("Rotation 0:");
     board.print_with_piece(&piece);

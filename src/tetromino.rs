@@ -7,6 +7,7 @@ pub enum Shape {
     J,
     L,
 }
+
 pub struct Tetromino {
     pub pos: (i32, i32),
     pub shape: Shape,
@@ -20,9 +21,9 @@ pub enum Direction {
 }
 
 impl Tetromino {
-    pub fn new(initial_x: i32, initial_y: i32, piece_shape: Shape) -> Self {
+    pub fn new(initial_cords: (i32, i32), piece_shape: Shape) -> Self {
         Self {
-            pos: (initial_x, initial_y),
+            pos: initial_cords,
             shape: piece_shape,
             rotation: 0,
         }
