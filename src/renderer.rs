@@ -70,17 +70,10 @@ fn get_piece_color(shape: &Shape) -> Color {
     }
 }
 
-pub fn draw_ui(score: u32, level: u32, fall_delay: f64) {
+pub fn draw_ui(score: u32, level: u32) {
     let ui_x = BOARD_OFFSET_X + (BOARD_WIDTH as f32 * BLOCK_SIZE) + 30.0;
 
     draw_text("TETRIS", ui_x, 80.0, 40.0, WHITE);
     draw_text(&format!("Score: {}", score), ui_x, 140.0, 30.0, WHITE);
     draw_text(&format!("Level: {}", level), ui_x, 180.0, 30.0, WHITE);
-    draw_text(
-        &format!("Fall_delay: {:0.3}", fall_delay),
-        ui_x,
-        180.0,
-        30.0,
-        WHITE,
-    );
 }

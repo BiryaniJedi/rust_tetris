@@ -11,6 +11,8 @@ use tetromino::Direction;
 
 use macroquad::prelude::*;
 
+const INITIAL_FALL_DELAY: f64 = 0.5;
+
 fn window_conf() -> Conf {
     Conf {
         window_title: "Rust Tetris".to_owned(),
@@ -64,7 +66,7 @@ async fn main() {
         }
 
         draw_board(&game.board, game.current_piece.as_ref());
-        draw_ui(game.score, level, fall_delay);
+        draw_ui(game.score, level);
 
         // Check game over
         if matches!(game.state, GameState::GameOver) {
@@ -81,6 +83,9 @@ async fn main() {
             if is_key_pressed(KeyCode::R) {
                 game = Game::new();
                 last_fall_time = get_time();
+                level = 1;
+                last_level_up_time = get_time();
+                fall_delay = INITIAL_FALL_DELAY;
             }
         }
 
