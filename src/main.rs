@@ -26,7 +26,7 @@ async fn main() {
     let mut last_fall_time = get_time();
     let mut last_level_up_time = get_time();
     let mut fall_delay = 0.5; // Seconds between automatic falls
-    let level_up_delay = 5.0; // Seconds between automatic falls
+    let level_up_delay = 30.0; // Seconds between automatic falls
     let mut level = 1;
     loop {
         // Handle input
@@ -37,13 +37,19 @@ async fn main() {
             let _ = game.try_move(Direction::Right);
         }
         if is_key_pressed(KeyCode::Down) {
-            let _ = game.try_move(Direction::Down);
+            fall_delay *= 0.5;
+        }
+        if is_key_released(KeyCode::Down) {
+            fall_delay *= 2.0;
         }
         if is_key_pressed(KeyCode::Up) || is_key_pressed(KeyCode::X) {
             let _ = game.try_rotate_clock();
         }
         if is_key_pressed(KeyCode::Z) {
             let _ = game.try_rotate_counter();
+        }
+        if is_key_pressed(KeyCode::Space) {
+            game.hard_lock();
         }
 
         let current_time = get_time();
@@ -58,7 +64,7 @@ async fn main() {
         }
 
         draw_board(&game.board, game.current_piece.as_ref());
-        draw_ui(game.score, level);
+        draw_ui(game.score, level, fall_delay);
 
         // Check game over
         if matches!(game.state, GameState::GameOver) {

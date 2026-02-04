@@ -104,6 +104,20 @@ impl Game {
         }
         Err("No current piece or place to put it!".to_string())
     }
+
+    pub fn hard_lock(&mut self) {
+        if let Some(piece) = &mut self.current_piece {
+            let mut temp_piece = Tetromino::new(piece.pos, piece.shape);
+            temp_piece.rotation = piece.rotation;
+            while self.board.can_place(&temp_piece) {
+                temp_piece.move_piece(Direction::Down);
+            }
+            if temp_piece.pos != piece.pos {
+                temp_piece.move_piece(Direction::Up);
+            }
+            piece.pos = temp_piece.pos;
+        }
+    }
     pub fn tick_down(&mut self) {
         if self.try_move(Direction::Down).is_ok() {
             return;
