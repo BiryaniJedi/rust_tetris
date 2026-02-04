@@ -21,11 +21,6 @@ pub enum Direction {
     Up,
 }
 
-pub enum Rotation {
-    Clock,
-    Counter,
-}
-
 impl Tetromino {
     pub fn new(initial_cords: (i32, i32), piece_shape: Shape) -> Self {
         Self {
@@ -33,10 +28,6 @@ impl Tetromino {
             shape: piece_shape,
             rotation: 0,
         }
-    }
-
-    pub fn update_pos(&mut self, new_pos: (i32, i32)) {
-        self.pos = new_pos;
     }
 
     pub fn move_piece(&mut self, direction: Direction) {

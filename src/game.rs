@@ -8,10 +8,10 @@ pub enum GameState {
 }
 
 pub struct Game {
-    board: Board,
-    current_piece: Option<Tetromino>,
-    state: GameState,
-    score: u32,
+    pub board: Board,
+    pub current_piece: Option<Tetromino>,
+    pub state: GameState,
+    pub score: u32,
 }
 
 impl Game {
@@ -24,14 +24,6 @@ impl Game {
         };
         game.set_random_piece();
         game
-    }
-
-    pub fn get_score(&self) -> u32 {
-        self.score
-    }
-
-    pub fn get_state(&self) -> GameState {
-        self.state
     }
 
     pub fn set_random_piece(&mut self) {
@@ -118,20 +110,6 @@ impl Game {
         }
         let _ = self.lock_current_piece();
     }
-    pub fn display(&self) {
-        match &self.state {
-            GameState::GameOver => {
-                println!("Game over!");
-            }
-            GameState::Playing => {
-                if let Some(piece) = &self.current_piece {
-                    self.board.print_with_piece(piece);
-                    return;
-                }
-                panic!("No current piece when trying to display game!")
-            }
-        }
-    }
 }
 
 pub fn match_shape(shape_index: u8) -> Shape {
@@ -144,15 +122,5 @@ pub fn match_shape(shape_index: u8) -> Shape {
         5 => Shape::J,
         6 => Shape::L,
         _ => Shape::T,
-    }
-}
-
-pub fn match_direction(direction_index: u8) -> Direction {
-    match direction_index {
-        0 => Direction::Left,
-        1 => Direction::Down,
-        2 => Direction::Right,
-        3 => Direction::Up,
-        _ => panic!("Bad direction!"),
     }
 }
